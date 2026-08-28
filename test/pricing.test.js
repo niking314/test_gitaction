@@ -25,6 +25,12 @@ test('SAVE20：满足门槛时减 20', () => {
   assert.equal(r.total, 379);
 });
 
+test('SAVE20：低于 100 不能用券', () => {
+  const r = calculateTotal([咖啡], 'SAVE20');
+  assert.equal(r.discount, 0);
+  assert.equal(r.total, 21.9);
+});
+
 test('HALFOFF：五折', () => {
   const r = calculateTotal([键盘], 'HALFOFF');
   assert.equal(r.discount, 199.5);
