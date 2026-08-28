@@ -24,8 +24,7 @@ export function calculateDiscount(subtotal, couponCode) {
   if (!coupon) return 0;
 
   if (coupon.type === 'full_reduction') {
-    // 没到门槛就不能用券
-    return subtotal >= coupon.threshold ? coupon.amount : 0;
+    return coupon.amount;
   }
   if (coupon.type === 'percent') {
     return subtotal * coupon.off;
