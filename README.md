@@ -18,6 +18,7 @@
 | [02 · 这个仓库有什么](docs/02-what-i-built.md) | 文件清单、四个工作流、**已真实运行的记录 + 那次失败的复盘** |
 | [03 · 通知机制](docs/03-notifications.md) | 事故怎么找到你手机、默认机制的严重局限、生产环境该怎么补 |
 | [04 · 演练手册](docs/04-runbook.md) | **完整分步操作**，从配密钥到验证恢复 |
+| [05 · 接入实录](docs/05-integration-debug.md) | **真实鉴权调试全过程**：env 与 with 的区别、claude-code-action 架构剖析 |
 | [附 · 换个大脑](docs/providers.md) | Claude / Codex / Gemini / Kimi / DeepSeek 对比与切换方式 |
 
 ## 🗂 代码结构
@@ -42,5 +43,6 @@ npm run serve        # 起本地服务器看页面
 
 ## ✅ 当前状态
 
-- CI / CD 链路 —— **已真实验证跑通**
-- AI 集成 —— 工作流已就位，等配 `DEEPSEEK_API_KEY` 密钥
+- CI / CD 链路 —— **已真实验证跑通**（CI ~8s，CD ~28s）
+- AI 集成（DeepSeek）—— **已真实验证跑通**，冒烟测试 23s 通过
+- 事故演练 —— 待开始
