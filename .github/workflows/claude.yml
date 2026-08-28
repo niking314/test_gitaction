@@ -41,12 +41,18 @@ jobs:
         env:
           # ── 大脑：DeepSeek 的 Anthropic 兼容端点 ──────────────────
           ANTHROPIC_BASE_URL: https://api.deepseek.com/anthropic
-          ANTHROPIC_AUTH_TOKEN: ${{ secrets.DEEPSEEK_API_KEY }}
-          # 注意：按 DeepSeek 官方文档，用 AUTH_TOKEN，不要同时设 ANTHROPIC_API_KEY
-          # 模型名随 DeepSeek 版本变化，需要指定时取消下面注释并填当前型号：
-          # ANTHROPIC_MODEL: deepseek-chat
+          # DeepSeek 会把 Claude 的型号名自动映射到自家模型，但显式指定更稳
+          ANTHROPIC_MODEL: deepseek-v4-pro
+          ANTHROPIC_DEFAULT_OPUS_MODEL: deepseek-v4-pro
+          ANTHROPIC_DEFAULT_SONNET_MODEL: deepseek-v4-pro
+          ANTHROPIC_DEFAULT_HAIKU_MODEL: deepseek-v4-flash
+          CLAUDE_CODE_SUBAGENT_MODEL: deepseek-v4-flash
           # ─────────────────────────────────────────────────────
         with:
+          # 密钥必须走 anthropic_api_key 这个「输入项」，不能只塞 ANTHROPIC_AUTH_TOKEN 环境变量：
+          # Action 启动前有一道预检，只认 ANTHROPIC_API_KEY / CLAUDE_CODE_OAUTH_TOKEN / WIF 三者之一。
+          # DeepSeek 的兼容端点明确支持 x-api-key 头，所以这样传是通的。
+          anthropic_api_key: ${{ secrets.DEEPSEEK_API_KEY }}
           claude_args: |
             --max-turns 25
 

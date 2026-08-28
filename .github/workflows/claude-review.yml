@@ -25,8 +25,12 @@ jobs:
         env:
           # 大脑：DeepSeek 兼容端点（换供应商见 docs/providers.md）
           ANTHROPIC_BASE_URL: https://api.deepseek.com/anthropic
-          ANTHROPIC_AUTH_TOKEN: ${{ secrets.DEEPSEEK_API_KEY }}
+          ANTHROPIC_MODEL: deepseek-v4-pro
+          ANTHROPIC_DEFAULT_OPUS_MODEL: deepseek-v4-pro
+          ANTHROPIC_DEFAULT_SONNET_MODEL: deepseek-v4-pro
+          ANTHROPIC_DEFAULT_HAIKU_MODEL: deepseek-v4-flash
         with:
+          anthropic_api_key: ${{ secrets.DEEPSEEK_API_KEY }}
           track_progress: true      # 用一条会更新的评论汇报进度，不刷屏
           prompt: |
             审查这个 PR，用中文回复。重点看：
