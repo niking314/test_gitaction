@@ -1,0 +1,29 @@
+# CI：任何 PR 和 main 上的提交都必须先过这一关。
+# PR 页面上那个绿勾/红叉就是这个工作流的结果——手机 review 时你就看它。
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    name: 单元测试
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: 跑测试
+        run: node --test
+
+      - name: 冒烟检查（关键页面文件都在）
+        run: |
+          test -f src/index.html
+          test -f src/app.js
+          test -f src/pricing.js
+          echo "✅ 产物完整"

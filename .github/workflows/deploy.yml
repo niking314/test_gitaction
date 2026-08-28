@@ -1,0 +1,56 @@
+# CD：合并进 main 之后自动上线到 GitHub Pages。
+# 注意 test job 是 deploy 的前置依赖——测试不过就不会上线。
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:        # 允许在网页/手机上手动点一次重新部署
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同一时间只允许一个部署在跑，避免两次合并互相覆盖
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  test:
+    name: 上线前测试
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test
+
+  deploy:
+    name: 部署到 Pages
+    needs: test               # ← 测试不过，这个 job 根本不会启动
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 写入版本号
+        # 把提交号打进页面，这样你在手机上刷新后能确认看到的是不是新版本
+        run: |
+          printf '{"sha":"%s","time":"%s"}\n' \
+            "$(git rev-parse --short HEAD)" \
+            "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > src/version.json
+          cat src/version.json
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./src          # 整个 src/ 目录就是网站根目录，不需要构建
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

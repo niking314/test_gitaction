@@ -1,0 +1,37 @@
+# 每个 PR 一开就自动过一遍 code review，不需要 @ 它。
+# 手机上你看到的第一条评论通常就是它写的，帮你把 diff 读薄。
+name: Claude Review
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      id-token: write
+      actions: read
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          track_progress: true      # 用一条会更新的评论汇报进度，不刷屏
+          prompt: |
+            审查这个 PR，用中文回复。重点看：
+            1. 计价逻辑（src/pricing.js）是否有边界情况没处理——负数、零、超出门槛
+            2. 改动是否配了对应的测试
+            3. 有没有引入回归
+
+            简明扼要，只说真正需要改的地方。没问题就说「看着没问题」。
+          claude_args: |
+            --max-turns 15

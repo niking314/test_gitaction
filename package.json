@@ -1,0 +1,13 @@
+{
+  "name": "shop-checkout-demo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "CI/CD + @claude 手机应急演练用的最小电商结算页",
+  "scripts": {
+    "test": "node --test",
+    "dev": "node --run serve",
+    "serve": "npx --yes serve src -l 5173"
+  },
+  "engines": { "node": ">=22" }
+}

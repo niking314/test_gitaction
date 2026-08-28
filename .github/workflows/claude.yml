@@ -1,0 +1,46 @@
+# 在 issue / PR 里 @claude，它就来干活。
+# 这是「手机应急」的核心：你在手机上打一句话，它在云端读代码、改代码、开 PR。
+name: Claude
+
+on:
+  issue_comment:                    # issue 和 PR 的普通评论
+    types: [created]
+  pull_request_review_comment:      # PR 里针对某一行代码的评论
+    types: [created]
+  pull_request_review:              # 提交 review 时带的总评
+    types: [submitted]
+  issues:                           # 新建 issue，或给 issue 打标签
+    types: [opened, assigned, labeled]
+
+jobs:
+  claude:
+    # 只有真的出现 @claude 才启动，避免每条评论都烧一次钱
+    if: |
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude')) ||
+      (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')))
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write         # 建分支、提交代码
+      pull-requests: write    # 开 PR、写评论
+      issues: write           # 回复 issue
+      id-token: write         # OIDC 鉴权
+      actions: read           # 让它能读 CI 日志，知道自己改挂了没
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0      # 给它完整历史，便于 git blame 定位问题是哪次引入的
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          # ── 二选一 ──────────────────────────────────────────
+          # A) Claude Pro/Max 订阅：本地跑 `claude setup-token` 拿 token
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # B) 按量付费 API Key（去掉上面一行，改用下面这行）
+          # anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          # ───────────────────────────────────────────────────
+          claude_args: |
+            --max-turns 25
