@@ -28,4 +28,4 @@ npm run serve        # 起本地服务器看页面
 
 ## 完整演练步骤
 
-见 [`docs/手机应急演练.md`](docs/手机应急演练.md)。
+见 [`docs/runbook.md`](docs/runbook.md)。
