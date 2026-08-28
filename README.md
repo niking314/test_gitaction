@@ -1,12 +1,26 @@
-# 🏪 小卖部结算台 —— CI/CD + @claude 手机应急演练
+# 🏪 小卖部结算台 —— CI/CD + AI Agent 手机应急演练
 
 一个刻意做小的真实项目，用来完整走一遍：
 
-> **线上出事故 → 手机上 @claude → 它开 PR → CI 自动验 → 手机上点 Merge → 自动重新上线**
+> **线上出事故 → 手机上 @一句话 → AI 开 PR → CI 自动验 → 手机上点 Merge → 自动重新上线**
 
 全程不碰电脑。
 
-## 这个仓库里有什么
+**线上页面：https://niking314.github.io/test_gitaction/**
+
+---
+
+## 📖 文档（建议按顺序读）
+
+| | 内容 |
+|---|---|
+| [01 · 基础概念](docs/01-concepts.md) | CI/CD 是什么、GitHub Actions 四层结构、事件驱动、权限与密钥 |
+| [02 · 这个仓库有什么](docs/02-what-i-built.md) | 文件清单、四个工作流、**已真实运行的记录 + 那次失败的复盘** |
+| [03 · 通知机制](docs/03-notifications.md) | 事故怎么找到你手机、默认机制的严重局限、生产环境该怎么补 |
+| [04 · 演练手册](docs/04-runbook.md) | **完整分步操作**，从配密钥到验证恢复 |
+| [附 · 换个大脑](docs/providers.md) | Claude / Codex / Gemini / Kimi / DeepSeek 对比与切换方式 |
+
+## 🗂 代码结构
 
 | 文件 | 作用 |
 |---|---|
@@ -17,15 +31,16 @@
 | `.github/workflows/deploy.yml` | **CD**：合并到 main 自动部署到 GitHub Pages |
 | `.github/workflows/claude.yml` | 在 issue/PR 里 @claude 触发它干活 |
 | `.github/workflows/claude-review.yml` | 每个 PR 自动 code review |
-| `CLAUDE.md` | 给 Claude 的项目规约，CI 里的 Claude 也会读 |
+| `CLAUDE.md` | 给 AI 的项目规约，CI 里的 AI 也会读 |
 
-## 本地跑
+## 🏃 本地跑
 
 ```bash
-node --test          # 跑测试
+node --test          # 跑测试（零依赖，8 秒）
 npm run serve        # 起本地服务器看页面
 ```
 
-## 完整演练步骤
+## ✅ 当前状态
 
-见 [`docs/runbook.md`](docs/runbook.md)。
+- CI / CD 链路 —— **已真实验证跑通**
+- AI 集成 —— 工作流已就位，等配 `DEEPSEEK_API_KEY` 密钥

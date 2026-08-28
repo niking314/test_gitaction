@@ -1,5 +1,8 @@
 # 在 issue / PR 里 @claude，它就来干活。
-# 这是「手机应急」的核心：你在手机上打一句话，它在云端读代码、改代码、开 PR。
+# 这是「手机应急」的核心：你在手机上打一句话，云端虚拟机启动、读代码、改代码、开 PR。
+#
+# 当前配置：胶水层用 Anthropic 的 Action，大脑用 DeepSeek（走 Anthropic 兼容端点）。
+# 想换回原生 Claude 或换成 Kimi，见 docs/providers.md。
 name: Claude
 
 on:
@@ -32,15 +35,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0      # 给它完整历史，便于 git blame 定位问题是哪次引入的
+          fetch-depth: 0      # 完整历史，便于 git log/blame 定位问题是哪次引入的
 
       - uses: anthropics/claude-code-action@v1
+        env:
+          # ── 大脑：DeepSeek 的 Anthropic 兼容端点 ──────────────────
+          ANTHROPIC_BASE_URL: https://api.deepseek.com/anthropic
+          ANTHROPIC_AUTH_TOKEN: ${{ secrets.DEEPSEEK_API_KEY }}
+          # 注意：按 DeepSeek 官方文档，用 AUTH_TOKEN，不要同时设 ANTHROPIC_API_KEY
+          # 模型名随 DeepSeek 版本变化，需要指定时取消下面注释并填当前型号：
+          # ANTHROPIC_MODEL: deepseek-chat
+          # ─────────────────────────────────────────────────────
         with:
-          # ── 二选一 ──────────────────────────────────────────
-          # A) Claude Pro/Max 订阅：本地跑 `claude setup-token` 拿 token
-          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          # B) 按量付费 API Key（去掉上面一行，改用下面这行）
-          # anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          # ───────────────────────────────────────────────────
           claude_args: |
             --max-turns 25
+
+# ── 换回原生 Claude 订阅（能力最强，不额外花钱）──────────────
+#      - uses: anthropics/claude-code-action@v1
+#        with:
+#          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+#          claude_args: |
+#            --max-turns 25
