@@ -19,6 +19,8 @@
 | [03 · 通知机制](docs/03-notifications.md) | 事故怎么找到你手机、默认机制的严重局限、生产环境该怎么补 |
 | [04 · 演练手册](docs/04-runbook.md) | **完整分步操作**，从配密钥到验证恢复 |
 | [05 · 接入实录](docs/05-integration-debug.md) | **真实鉴权调试全过程**：env 与 with 的区别、claude-code-action 架构剖析 |
+| [06 · 代码跑在哪](docs/06-where-does-it-run.md) | **Jenkins vs GitHub Actions**：CI/CD 系统本身跑在哪、self-hosted runner、容器化 CD 示例、概念对照表 |
+| [07 · git/GitHub 实操](docs/07-git-github-practice.md) | 分支与 PR 全流程、三种合并方式、`gh` 命令速查、网页端设置项地图、手机能做什么 |
 | [附 · 换个大脑](docs/providers.md) | Claude / Codex / Gemini / Kimi / DeepSeek 对比与切换方式 |
 
 ## 🗂 代码结构
@@ -45,4 +47,4 @@ npm run serve        # 起本地服务器看页面
 
 - CI / CD 链路 —— **已真实验证跑通**（CI ~8s，CD ~28s）
 - AI 集成（DeepSeek）—— **已真实验证跑通**，冒烟测试 23s 通过
-- 事故演练 —— 待开始
+- 事故演练 —— 🔴 **进行中：线上正在算错钱**
